@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   useEffect,
   useRef,
@@ -603,6 +604,11 @@ export default function ApiLesson() {
           Your drafts stay in this browser. They aren’t sent for feedback or
           synced yet.
         </p>
+        <nav aria-label="More practice" className="actions">
+          <Link className="button secondary" href="/offline-chat">
+            Practice system design: Offline chat
+          </Link>
+        </nav>
       </main>
     </>
   );

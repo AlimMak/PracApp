@@ -63,6 +63,7 @@ export const FRESH_CHAT: ChatState = {
 };
 
 type Action =
+  | { type: "restore"; state: ChatState }
   | {
       type:
         | "send"
@@ -93,6 +94,8 @@ export function retainsMessage(state: ChatState): boolean {
 export function chatReducer(state: ChatState, action: Action): ChatState {
   const { phase } = state;
   switch (action.type) {
+    case "restore":
+      return action.state;
     case "send":
       return phase === "online-ready"
         ? { ...state, phase: "online-sending" }
