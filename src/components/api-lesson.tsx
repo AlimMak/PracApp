@@ -612,6 +612,9 @@ export default function ApiLesson() {
           <Link className="button secondary" href="/offline-chat">
             Practice system design: Offline chat
           </Link>
+          <Link className="button secondary" href="/star">
+            Practice behavioral interviews: STAR
+          </Link>
         </nav>
       </main>
     </>

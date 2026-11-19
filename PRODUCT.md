@@ -8,7 +8,7 @@ Use it for a short morning session on a phone, or a longer session on Windows or
 
 1. **One playable API lesson (complete).** Untimed quick check, optional fixed Austin weather web API example, transfer question, one authored follow-up, worked answer and self-review, retry/attempt comparison, local resume. Next.js, TypeScript, plain CSS. No live API, AI grading, or deployment.
 2. **Visual system design (complete).** Deliver a chat message to an offline recipient. Tap to place components, undo, run the design, explain it, and offer a watch-and-explain alternative.
-3. **Behavioral practice.** Teach STAR with a fictional student project; guide and save the learner's own stories. Shared typed/spoken answer input with editable transcription and typing fallback.
+3. **Behavioral practice (complete).** Teach STAR with a fictional student project and guide learners through saving their own stories. Shared answer input supports typing and editable browser dictation.
 4. **Mixed sessions and curriculum.** Add direct entry, resume, revisit weak concepts, semantic HTML, HTTP, indexes, threads, debugging, tests, a cache challenge, and more behavioral prompts.
 5. **Accounts and sync.** Optional sign-in, guest import, cross-device drafts/progress/stories, per-user isolation, conflict handling, sign-out and deletion. Default to Supabase if no provider exists.
 6. **Answer-aware AI coaching.** Server-side follow-up and grounded feedback, bounded usage, privacy, explicit AI labels, immediate authored fallback, and a repeatable evaluation set.
@@ -20,4 +20,6 @@ Milestone 1 is implemented. TypeScript, five progress-state tests, the productio
 
 Milestone 2 is implemented at `/offline-chat`. The root route still opens the API lesson and links to the chat activity. Both chat paths share the same simulation, and chat progress stays in the browser.
 
-Next is milestone 3 when requested. Preserve both existing activities and **self-review** labeling. Never commit real learner answers. Deployment belongs to milestone 7.
+Milestone 3 is implemented at `/star`. Learners can save and edit their stories in the browser, then rehearse with optional cues and self-review. All three activities use the same answer input. Dictation depends on browser support and permission. STAR also supports rehearsal aloud without recording.
+
+Next is milestone 4 when requested. Preserve the direct activity links and **self-review** labeling. Never commit real learner answers. Deployment belongs to milestone 7.

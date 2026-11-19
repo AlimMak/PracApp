@@ -1,6 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
-async function mockSpeech(page: Page, outcome: "denied" | "transcript") {
+async function mockSpeech(
+  page: Page,
+  outcome: "denied" | "transcript" | "silent",
+) {
   await page.addInitScript((mode) => {
     const stats = { started: 0, aborted: 0 };
     Object.defineProperty(window, "speechTestStats", { value: stats });
@@ -16,7 +19,7 @@ async function mockSpeech(page: Page, outcome: "denied" | "transcript") {
           if (mode === "denied") {
             this.onerror?.({ error: "not-allowed" });
             this.onend?.();
-          } else this.onstart?.();
+          } else if (mode === "transcript") this.onstart?.();
         });
       }
       stop() {
@@ -63,6 +66,31 @@ test("microphone denial leaves the draft intact and typing usable", async ({
   await expect(page.getByRole("heading", { level: 1 })).not.toHaveText(
     "How would you explain an API to another engineer?",
   );
+});
+
+test("an already blocked microphone exits waiting even without a speech error callback", async ({
+  page,
+}) => {
+  await mockSpeech(page, "silent");
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator.permissions, "query", {
+      value: async () => ({ state: "denied" }),
+    });
+  });
+  await page.goto("/");
+  const draft = page.getByLabel("Your first explanation");
+  await draft.fill("My existing draft");
+  await page.getByRole("button", { name: "Start dictation" }).click();
+  await expect(
+    page.getByText(/Microphone or speech access was denied/),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Start dictation" }),
+  ).toBeEnabled();
+  await expect(draft).toHaveValue("My existing draft");
+  expect(
+    await page.evaluate(() => Reflect.get(window, "speechTestStats").aborted),
+  ).toBe(1);
 });
 
 test("dictation stays in preview until added and the answer remains editable", async ({

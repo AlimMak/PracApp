@@ -499,6 +499,11 @@ export default function OfflineChat() {
               : "Browser saving is unavailable. Keep this tab open to keep your work."}
           </p>
         )}
+        <nav aria-label="More practice" className="actions">
+          <Link className="button secondary" href="/star">
+            Practice behavioral interviews: STAR
+          </Link>
+        </nav>
       </main>
     </>
   );

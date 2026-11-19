@@ -131,6 +131,19 @@ export default function AnswerInput({
           );
       };
       recognition.start();
+      // Some engines never send an error callback when access was already denied.
+      void navigator.permissions
+        ?.query({ name: "microphone" })
+        .then(({ state }) => {
+          if (state !== "denied" || !active()) return;
+          instance.current = null;
+          setPhase("idle");
+          setMessage(speechError("not-allowed"));
+          recognition.abort();
+        })
+        .catch(() => {
+          // Browsers without this permission query report errors via recognition events.
+        });
     } catch (error) {
       instance.current = null;
       setPhase("idle");
@@ -141,6 +154,13 @@ export default function AnswerInput({
   function stop() {
     const active = instance.current;
     if (!active) return;
+    if (phase === "starting") {
+      instance.current = null;
+      setPhase("idle");
+      setMessage("Dictation canceled. You can still type your answer.");
+      active.abort();
+      return;
+    }
     setPhase("stopping");
     setMessage("Finishing transcription…");
     try {
@@ -187,6 +207,7 @@ export default function AnswerInput({
               className="button secondary"
               onClick={start}
               disabled={Boolean(transcript)}
+              aria-describedby={id + "-voice-note"}
             >
               Start dictation
             </button>
