@@ -6,7 +6,7 @@ Use it for a short morning session on a phone, or a longer session on Windows or
 
 ## Milestones, in order
 
-1. **One playable API lesson (current).** Untimed quick check, optional fixed Austin weather web API example, transfer question, one authored follow-up, worked answer and self-review, retry/attempt comparison, local resume. Next.js, TypeScript, plain CSS. No live API, AI grading, or deployment.
+1. **One playable API lesson (complete).** Untimed quick check, optional fixed Austin weather web API example, transfer question, one authored follow-up, worked answer and self-review, retry/attempt comparison, local resume. Next.js, TypeScript, plain CSS. No live API, AI grading, or deployment.
 2. **Visual system design.** Deliver a chat message to an offline recipient. Tap to place components, undo, run the design, explain it, and offer a watch-and-explain alternative.
 3. **Behavioral practice.** Teach STAR with a fictional student project; guide and save the learner's own stories. Shared typed/spoken answer input with editable transcription and typing fallback.
 4. **Mixed sessions and curriculum.** Add direct entry, resume, revisit weak concepts, semantic HTML, HTTP, indexes, threads, debugging, tests, a cache challenge, and more behavioral prompts.
@@ -16,4 +16,6 @@ Use it for a short morning session on a phone, or a longer session on Windows or
 
 ## Current handoff
 
-Implement milestone 1 only. Open directly to “How would you explain an API to another engineer?” Keep the weather diagram central, distinguish web APIs from APIs between local software components, and label feedback **self-review**. Use a fixed sample response, with no credentials or network weather request. Never commit real learner answers. Deployment belongs to milestone 7.
+Milestone 1 is implemented. TypeScript, five progress-state tests, the production build, and 18 browser checks passed (desktop Chromium, phone Chromium, and phone WebKit emulation). Both entry paths, local resume, two-attempt comparison, keyboard use, reduced motion, and 320px layouts were verified. Physical phone feel still needs the learner’s check.
+
+Next is milestone 2 when requested. Preserve the API lesson’s direct entry, central weather diagram, local-only drafts, and **self-review** labeling. No credentials or live weather request are needed. Never commit real learner answers. Deployment belongs to milestone 7.
