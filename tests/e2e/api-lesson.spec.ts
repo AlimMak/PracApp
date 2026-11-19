@@ -215,8 +215,17 @@ test("show me traces fixed weather with replay, reduced motion, and saved positi
 test("keyboard can open the example and follow step focus", async ({
   page,
 }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "SpeechRecognition", { value: undefined });
+    Object.defineProperty(window, "webkitSpeechRecognition", {
+      value: undefined,
+    });
+  });
   await page.goto("/");
   await expect(page.getByLabel("Your first explanation")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Start dictation" }),
+  ).toHaveCount(0);
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Skip to practice" }),

@@ -1,0 +1,28 @@
+.voice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 10px;
+}
+.voice p,
+.status {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  margin: 0;
+}
+.status:not(:empty) {
+  margin-top: 8px;
+}
+.transcript {
+  margin-top: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-wrap: anywhere;
+}
+.transcript p {
+  margin: 4px 0;
+  white-space: pre-wrap;
+}

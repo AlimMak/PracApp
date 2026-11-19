@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import AnswerInput from "./answer-input";
 import { useEffect, useReducer, useRef, useState } from "react";
 import {
   CHAT_ANSWER_LIMIT,
@@ -389,22 +390,22 @@ export default function OfflineChat() {
                     ? "Describe what happens to an accepted message while Leo is offline."
                     : "Explain how the server finds any waiting messages and gets them to Leo."}
                 </p>
-                <label htmlFor="chat-answer">
-                  {phase === "explain"
-                    ? "Your explanation"
-                    : "Your follow-up answer"}
-                </label>
-                <textarea
+                <AnswerInput
                   key={field}
                   id="chat-answer"
+                  label={
+                    phase === "explain"
+                      ? "Your explanation"
+                      : "Your follow-up answer"
+                  }
                   rows={4}
                   maxLength={CHAT_ANSWER_LIMIT}
                   value={state[field]}
-                  onChange={(event) =>
+                  onChange={(value) =>
                     dispatch({
                       type: "draft",
                       field,
-                      value: event.target.value,
+                      value,
                     })
                   }
                 />

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import AnswerInput from "./answer-input";
 import {
   useEffect,
   useRef,
@@ -262,6 +263,7 @@ export default function ApiLesson() {
                 <form onSubmit={(event) => submit(event, "example")}>
                   <AnswerInput
                     id="quick-answer"
+                    maxLength={MAX_ANSWER}
                     label="Your first explanation"
                     value={state.quickAnswer}
                     placeholder="I think an API is…"
@@ -365,6 +367,7 @@ export default function ApiLesson() {
                 <form onSubmit={(event) => submit(event, "followup")}>
                   <AnswerInput
                     id="transfer-answer"
+                    maxLength={MAX_ANSWER}
                     label="Your explanation"
                     value={state.answer}
                     placeholder="The developer would need to know…"
@@ -420,6 +423,7 @@ export default function ApiLesson() {
                 >
                   <AnswerInput
                     id="followup-answer"
+                    maxLength={MAX_ANSWER}
                     label="Your follow-up answer"
                     value={state.followup}
                     placeholder="I’d say…"
@@ -611,42 +615,6 @@ export default function ApiLesson() {
         </nav>
       </main>
     </>
-  );
-}
-
-function AnswerInput({
-  id,
-  label,
-  value,
-  placeholder,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  placeholder: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="answer-input">
-      <div className="input-label-row">
-        <label htmlFor={id}>{label}</label>
-        <span>In your own words</span>
-      </div>
-      <textarea
-        id={id}
-        value={value}
-        placeholder={placeholder}
-        maxLength={MAX_ANSWER}
-        onChange={(event) => onChange(event.target.value)}
-        rows={5}
-      />
-      <span className="input-help">
-        {value.length > MAX_ANSWER - 500
-          ? `${MAX_ANSWER - value.length} characters left`
-          : "No perfect wording needed."}
-      </span>
-    </div>
   );
 }
 
