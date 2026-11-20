@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import AnswerInput from "./answer-input";
+import { guestStorage, usePracticeStorage } from "./practice-storage";
 import {
   activityKey,
   PracticeLinks,
@@ -138,6 +139,7 @@ const STEP_INFO: Record<Step, { number: number; label: string }> = {
 };
 
 export default function ApiLesson({ session }: { session?: SessionContext }) {
+  const storage = usePracticeStorage();
   const key = session ? activityKey("api", session) : STORAGE_KEY;
   const [state, setState] = useState<LessonState>(FRESH_STATE);
   const [ready, setReady] = useState(false);
@@ -149,22 +151,22 @@ export default function ApiLesson({ session }: { session?: SessionContext }) {
 
   useEffect(() => {
     try {
-      setState(restoreLesson(window.localStorage.getItem(key)));
+      setState(restoreLesson(storage.getItem(key)));
     } catch {
       setStorageStatus("unavailable");
     }
     setReady(true);
-  }, [key]);
+  }, [key, storage]);
 
   useEffect(() => {
     if (!ready) return;
     try {
-      window.localStorage.setItem(key, JSON.stringify(state));
+      storage.setItem(key, JSON.stringify(state));
       setStorageStatus("saved");
     } catch {
       setStorageStatus("unavailable");
     }
-  }, [ready, state, key]);
+  }, [ready, state, key, storage]);
 
   useEffect(() => {
     if (ready && previousStep.current !== state.step) {
@@ -608,15 +610,18 @@ export default function ApiLesson({ session }: { session?: SessionContext }) {
               {storageStatus === "unavailable"
                 ? "Browser saving is unavailable. Keep this tab open to keep your work."
                 : storageStatus === "saved"
-                  ? "Saved on this browser"
+                  ? storage === guestStorage
+                    ? "Saved on this browser"
+                    : "See account sync status"
                   : "Opening your practice"}
             </span>
           </p>
           <span>No account needed</span>
         </footer>
         <p className="privacy-note">
-          Your drafts stay in this browser. They aren’t sent for feedback or
-          synced yet.
+          {storage === guestStorage
+            ? "Guest drafts stay in this browser."
+            : "Your drafts sync privately to your practice account."}
         </p>
         {!session && (
           <nav aria-label="More practice" className="actions">

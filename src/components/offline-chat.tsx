@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import AnswerInput from "./answer-input";
+import { guestStorage, usePracticeStorage } from "./practice-storage";
 import {
   activityKey,
   RatingActions,
@@ -160,6 +161,7 @@ function ChatDiagram({
 }
 
 export default function OfflineChat({ session }: { session?: SessionContext }) {
+  const storage = usePracticeStorage();
   const key = session ? activityKey("offline-chat", session) : CHAT_STORAGE_KEY;
   const [state, dispatch] = useReducer(chatReducer, FRESH_CHAT);
   const [selected, setSelected] = useState<Component | null>(null);
@@ -182,22 +184,22 @@ export default function OfflineChat({ session }: { session?: SessionContext }) {
 
   useEffect(() => {
     try {
-      const restored = restoreChat(localStorage.getItem(key));
+      const restored = restoreChat(storage.getItem(key));
       dispatch({ type: "restore", state: restored });
     } catch {
       setSaved(false);
     }
     setReady(true);
-  }, [key]);
+  }, [key, storage]);
 
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(key, JSON.stringify(state));
+      storage.setItem(key, JSON.stringify(state));
     } catch {
       setSaved(false);
     }
-  }, [ready, state, key]);
+  }, [ready, state, key, storage]);
 
   useEffect(() => {
     if (
@@ -510,7 +512,9 @@ export default function OfflineChat({ session }: { session?: SessionContext }) {
         {ready && (
           <p className={styles.save} role="status">
             {saved
-              ? "Progress and answers stay in this browser."
+              ? storage === guestStorage
+                ? "Progress and answers stay in this browser."
+                : "See account sync status for your progress."
               : "Browser saving is unavailable. Keep this tab open to keep your work."}
           </p>
         )}

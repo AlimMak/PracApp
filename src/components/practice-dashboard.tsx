@@ -10,7 +10,10 @@ export default function PracticeDashboard() {
   const next = plan && nextTopic(plan);
   return (
     <main className="lesson-shell curriculum-shell">
-      <Link href="/">API lesson</Link>
+      <nav aria-label="Practice navigation" className="account-nav">
+        <Link href="/">API lesson</Link>
+        <Link href="/account">Practice account</Link>
+      </nav>
       <header className="practice-card practice-dashboard">
         <h1>Interview Practice</h1>
         <p>

@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { stableId } from "@/lib/account-data";
+import type { PracticeStorage } from "@/lib/account-sync";
+import { usePracticeStorage } from "./practice-storage";
 import {
   EMPTY_PLAN,
   PLAN_KEY,
@@ -15,51 +18,54 @@ import {
 } from "@/lib/practice-plan";
 
 const PLAN_CHANGE = "interview-practice:plan-change";
-let memoryPlan = EMPTY_PLAN;
-let persisted = true;
+const fallback = new WeakMap<PracticeStorage, Plan>();
 
-function readPlan() {
+function readPlan(storage: PracticeStorage) {
   try {
-    if (persisted) memoryPlan = restorePlan(localStorage.getItem(PLAN_KEY));
+    return fallback.get(storage) ?? restorePlan(storage.getItem(PLAN_KEY));
   } catch {
-    persisted = false;
+    return fallback.get(storage) ?? EMPTY_PLAN;
   }
-  return memoryPlan;
 }
 
-export function changePlan(apply: (plan: Plan) => Plan) {
-  memoryPlan = apply(readPlan());
+export function changePlan(
+  storage: PracticeStorage,
+  apply: (plan: Plan) => Plan,
+) {
+  const next = apply(readPlan(storage));
   try {
-    localStorage.setItem(PLAN_KEY, JSON.stringify(memoryPlan));
-    persisted = true;
+    storage.setItem(PLAN_KEY, JSON.stringify(next));
+    fallback.delete(storage);
   } catch {
-    persisted = false;
+    fallback.set(storage, next);
   }
   window.dispatchEvent(new Event(PLAN_CHANGE));
 }
 
 export function usePlan() {
+  const storage = usePracticeStorage();
   const [plan, setPlan] = useState<Plan | null>(null);
   useEffect(() => {
     function sync() {
-      setPlan(readPlan());
+      setPlan(readPlan(storage));
     }
-    function storage(event: StorageEvent) {
+    function browserStorage(event: StorageEvent) {
       if (event.key === PLAN_KEY || event.key === null) sync();
     }
     sync();
     window.addEventListener(PLAN_CHANGE, sync);
-    window.addEventListener("storage", storage);
+    window.addEventListener("storage", browserStorage);
     return () => {
       window.removeEventListener(PLAN_CHANGE, sync);
-      window.removeEventListener("storage", storage);
+      window.removeEventListener("storage", browserStorage);
     };
-  }, []);
+  }, [storage]);
   return plan;
 }
 
 export function StartPractice() {
   const router = useRouter();
+  const storage = usePracticeStorage();
   const plan = usePlan();
   const active =
     plan?.session && plan.session.position < plan.session.items.length;
@@ -68,7 +74,7 @@ export function StartPractice() {
       type="button"
       className="button primary"
       onClick={() => {
-        changePlan(startSession);
+        changePlan(storage, (current) => startSession(current, stableId()));
         router.push("/practice/session");
       }}
     >
@@ -92,6 +98,7 @@ export type SessionContext = {
   number: number;
   position: number;
   total: number;
+  draftId?: string;
 };
 
 export function SessionHeader({ session }: { session: SessionContext }) {
@@ -112,6 +119,7 @@ export function RatingActions({
   id: string;
   session?: SessionContext;
 }) {
+  const storage = usePracticeStorage();
   const plan = usePlan();
   const rating = plan?.reviews[id]?.rating;
   return (
@@ -129,7 +137,7 @@ export function RatingActions({
             className="button secondary"
             aria-pressed={session ? undefined : rating === value}
             onClick={() =>
-              changePlan((current) =>
+              changePlan(storage, (current) =>
                 reviewItem(current, id, value, session?.number),
               )
             }
@@ -145,6 +153,6 @@ export function RatingActions({
 
 export function activityKey(id: string, session?: SessionContext) {
   return session
-    ? `interview-practice:run:${session.number}:${id}`
+    ? `interview-practice:run:${session.draftId ?? session.number}:${id}`
     : `interview-practice:item:${id}`;
 }

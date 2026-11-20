@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import AnswerInput from "./answer-input";
+import { usePracticeStorage } from "./practice-storage";
 import type { PromptActivity } from "@/lib/cache-activity";
 import {
   CacheLab,
@@ -81,6 +82,7 @@ export default function QuestionPractice({
   session?: SessionContext;
 }) {
   const { id, title, track } = question;
+  const storage = usePracticeStorage();
   const key = activityKey(id, session);
   const [draft, setDraft] = useState(() => initial(id));
   const [loaded, setLoaded] = useState(false);
@@ -90,22 +92,22 @@ export default function QuestionPractice({
 
   useEffect(() => {
     try {
-      setDraft(restore(localStorage.getItem(key), id));
+      setDraft(restore(storage.getItem(key), id));
     } catch {
       setSaved(false);
     }
     setLoaded(true);
-  }, [id, key]);
+  }, [id, key, storage]);
 
   useEffect(() => {
     if (!loaded) return;
     try {
-      localStorage.setItem(key, JSON.stringify(draft));
+      storage.setItem(key, JSON.stringify(draft));
       setSaved(true);
     } catch {
       setSaved(false);
     }
-  }, [draft, key, loaded]);
+  }, [draft, key, loaded, storage]);
 
   useEffect(() => {
     if (loaded) heading.current?.focus();

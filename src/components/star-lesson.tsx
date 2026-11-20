@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import AnswerInput from "./answer-input";
+import { guestStorage, usePracticeStorage } from "./practice-storage";
 import {
   CUE_LIMIT,
   FRESH_STAR,
@@ -533,6 +534,7 @@ function Practice({
 }
 
 export default function StarLesson() {
+  const storage = usePracticeStorage();
   const [state, update] = useState(FRESH_STAR);
   const [ready, setReady] = useState(false);
   const [saved, setSaved] = useState(true);
@@ -549,22 +551,22 @@ export default function StarLesson() {
 
   useEffect(() => {
     try {
-      update(restoreStar(localStorage.getItem(STAR_STORAGE_KEY)));
+      update(restoreStar(storage.getItem(STAR_STORAGE_KEY)));
     } catch {
       setSaved(false);
     }
     setReady(true);
-  }, []);
+  }, [storage]);
 
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(STAR_STORAGE_KEY, JSON.stringify(state));
+      storage.setItem(STAR_STORAGE_KEY, JSON.stringify(state));
       setSaved(true);
     } catch {
       setSaved(false);
     }
-  }, [ready, state]);
+  }, [ready, state, storage]);
 
   useEffect(() => {
     if (!ready) return;
@@ -646,7 +648,9 @@ export default function StarLesson() {
         {ready && (
           <p className={styles.save} role="status">
             {saved
-              ? "Stories and written answers stay in this browser."
+              ? storage === guestStorage
+                ? "Stories and written answers stay in this browser."
+                : "Your stories sync privately to your practice account."
               : "Browser saving is unavailable. Keep this tab open to keep your work."}
           </p>
         )}

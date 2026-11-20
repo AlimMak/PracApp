@@ -13,3 +13,5 @@ test-results/
 Thumbs.db
 .local/
 learner-data/
+supabase/.temp/
+supabase/.branches/

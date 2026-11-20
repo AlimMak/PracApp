@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import PracticeAccountProvider from "@/components/practice-account";
 
 export const metadata: Metadata = {
   title: "What is an API? · Interview Practice",
@@ -18,7 +19,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <PracticeAccountProvider>{children}</PracticeAccountProvider>
+      </body>
     </html>
   );
 }

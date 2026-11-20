@@ -94,7 +94,7 @@ export class AccountSync implements PracticeStorage {
   }
 
   hasImported(receipt: string) {
-    return this.local.imports.includes(receipt);
+    return this.base.payload.imports.includes(receipt);
   }
 
   close() {

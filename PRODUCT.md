@@ -10,7 +10,7 @@ Use it for a short morning session on a phone, or a longer session on Windows or
 2. **Visual system design (complete).** Deliver a chat message to an offline recipient. Tap to place components, undo, run the design, explain it, and offer a watch-and-explain alternative.
 3. **Behavioral practice (complete).** Teach STAR with a fictional student project and guide learners through saving their own stories. Shared answer input supports typing and editable browser dictation.
 4. **Mixed sessions and curriculum (complete).** Start a three-activity session, resume drafts, bring back topics marked Still practicing, and find the next topic in a guided path. The catalog includes six new CS lessons, a cache simulator, and three behavioral prompts.
-5. **Accounts and sync.** Optional sign-in, guest import, cross-device drafts/progress/stories, per-user isolation, conflict handling, sign-out and deletion. Default to Supabase if no provider exists.
+5. **Accounts and sync (implemented).** Optional Supabase sign-in, guest import, cross-device progress and drafts, per-user access, explicit conflict resolution, sign-out and story deletion.
 6. **Answer-aware AI coaching.** Server-side follow-up and grounded feedback, bounded usage, privacy, explicit AI labels, immediate authored fallback, and a repeatable evaluation set.
 7. **Test and publish.** Verify phone/desktop and complete flows, build, push, deploy the verified revision, check production, document setup/architecture/demo, and draft factual resume bullets.
 
@@ -24,4 +24,6 @@ Milestone 3 is implemented at `/star`. Learners can save and edit their stories 
 
 Milestone 4 adds **Start practice** at the existing API entry, a catalog and progress at `/practice`, and mixed sessions at `/practice/session`. Session drafts and direct attempts have separate browser keys. Progress comes from the learner’s self-review.
 
-Next is milestone 5 when requested. Preserve the direct activity links and **self-review** labeling. Never commit real learner answers. Deployment belongs to milestone 7.
+Milestone 5 adds optional accounts at `/account`. Configure a Supabase project and apply the migration to enable hosted sync. Guest practice starts immediately and remains in browser storage. Signed-in drafts stay in memory until the account sync confirms the write.
+
+Next is milestone 6 when requested. Preserve the direct activity links and **self-review** labeling. Never commit real learner answers. Deployment belongs to milestone 7.

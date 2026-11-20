@@ -9,7 +9,8 @@
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:accounts": "playwright test --config playwright.accounts.config.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.119.2",
