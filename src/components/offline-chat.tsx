@@ -2,6 +2,12 @@
 
 import Link from "next/link";
 import AnswerInput from "./answer-input";
+import {
+  activityKey,
+  RatingActions,
+  SessionHeader,
+  type SessionContext,
+} from "./practice-progress";
 import { useEffect, useReducer, useRef, useState } from "react";
 import {
   CHAT_ANSWER_LIMIT,
@@ -153,7 +159,8 @@ function ChatDiagram({
   );
 }
 
-export default function OfflineChat() {
+export default function OfflineChat({ session }: { session?: SessionContext }) {
+  const key = session ? activityKey("offline-chat", session) : CHAT_STORAGE_KEY;
   const [state, dispatch] = useReducer(chatReducer, FRESH_CHAT);
   const [selected, setSelected] = useState<Component | null>(null);
   const [ready, setReady] = useState(false);
@@ -175,22 +182,22 @@ export default function OfflineChat() {
 
   useEffect(() => {
     try {
-      const restored = restoreChat(localStorage.getItem(CHAT_STORAGE_KEY));
+      const restored = restoreChat(localStorage.getItem(key));
       dispatch({ type: "restore", state: restored });
     } catch {
       setSaved(false);
     }
     setReady(true);
-  }, []);
+  }, [key]);
 
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(key, JSON.stringify(state));
     } catch {
       setSaved(false);
     }
-  }, [ready, state]);
+  }, [ready, state, key]);
 
   useEffect(() => {
     if (
@@ -253,6 +260,11 @@ export default function OfflineChat() {
         id="chat-practice"
         tabIndex={-1}
       >
+        {session ? (
+          <SessionHeader session={session} />
+        ) : (
+          <Link href="/practice">Activities and progress</Link>
+        )}
         <p className={styles.topic}>
           System design <span aria-hidden="true">/</span> Offline chat
         </p>
@@ -480,13 +492,16 @@ export default function OfflineChat() {
                   Save the message while the recipient is offline, then retrieve
                   and deliver it after they reconnect.
                 </p>
+                <RatingActions id="offline-chat" session={session} />
                 <div className="actions">
                   <button className="button secondary" onClick={retry}>
                     Retry design
                   </button>
-                  <Link className="button primary" href="/">
-                    Practice explaining APIs
-                  </Link>
+                  {!session && (
+                    <Link className="button primary" href="/">
+                      Practice explaining APIs
+                    </Link>
+                  )}
                 </div>
               </>
             )}
@@ -499,11 +514,13 @@ export default function OfflineChat() {
               : "Browser saving is unavailable. Keep this tab open to keep your work."}
           </p>
         )}
-        <nav aria-label="More practice" className="actions">
-          <Link className="button secondary" href="/star">
-            Practice behavioral interviews: STAR
-          </Link>
-        </nav>
+        {!session && (
+          <nav aria-label="More practice" className="actions">
+            <Link className="button secondary" href="/star">
+              Practice behavioral interviews: STAR
+            </Link>
+          </nav>
+        )}
       </main>
     </>
   );

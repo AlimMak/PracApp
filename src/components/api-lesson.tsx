@@ -3,6 +3,13 @@
 import Link from "next/link";
 import AnswerInput from "./answer-input";
 import {
+  activityKey,
+  PracticeLinks,
+  RatingActions,
+  SessionHeader,
+  type SessionContext,
+} from "./practice-progress";
+import {
   useEffect,
   useRef,
   useState,
@@ -130,7 +137,8 @@ const STEP_INFO: Record<Step, { number: number; label: string }> = {
   finished: { number: 4, label: "Lesson complete" },
 };
 
-export default function ApiLesson() {
+export default function ApiLesson({ session }: { session?: SessionContext }) {
+  const key = session ? activityKey("api", session) : STORAGE_KEY;
   const [state, setState] = useState<LessonState>(FRESH_STATE);
   const [ready, setReady] = useState(false);
   const [storageStatus, setStorageStatus] = useState<
@@ -141,22 +149,22 @@ export default function ApiLesson() {
 
   useEffect(() => {
     try {
-      setState(restoreLesson(window.localStorage.getItem(STORAGE_KEY)));
+      setState(restoreLesson(window.localStorage.getItem(key)));
     } catch {
       setStorageStatus("unavailable");
     }
     setReady(true);
-  }, []);
+  }, [key]);
 
   useEffect(() => {
     if (!ready) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      window.localStorage.setItem(key, JSON.stringify(state));
       setStorageStatus("saved");
     } catch {
       setStorageStatus("unavailable");
     }
-  }, [ready, state]);
+  }, [ready, state, key]);
 
   useEffect(() => {
     if (ready && previousStep.current !== state.step) {
@@ -192,6 +200,7 @@ export default function ApiLesson() {
       </header>
 
       <main id="practice" className="lesson-shell" tabIndex={-1}>
+        {session ? <SessionHeader session={session} /> : <PracticeLinks />}
         <div className="lesson-meta">
           <span className="topic-tag">CS FUNDAMENTALS</span>
           <span className="untimed">At your pace · No timer</span>
@@ -565,6 +574,7 @@ export default function ApiLesson() {
                   points checked. You can keep practicing either way.
                 </p>
                 <AttemptComparison state={state} expanded />
+                <RatingActions id="api" session={session} />
                 <div className="actions">
                   <button
                     className="button secondary"
@@ -608,14 +618,16 @@ export default function ApiLesson() {
           Your drafts stay in this browser. They aren’t sent for feedback or
           synced yet.
         </p>
-        <nav aria-label="More practice" className="actions">
-          <Link className="button secondary" href="/offline-chat">
-            Practice system design: Offline chat
-          </Link>
-          <Link className="button secondary" href="/star">
-            Practice behavioral interviews: STAR
-          </Link>
-        </nav>
+        {!session && (
+          <nav aria-label="More practice" className="actions">
+            <Link className="button secondary" href="/offline-chat">
+              Practice system design: Offline chat
+            </Link>
+            <Link className="button secondary" href="/star">
+              Practice behavioral interviews: STAR
+            </Link>
+          </nav>
+        )}
       </main>
     </>
   );

@@ -231,6 +231,14 @@ test("keyboard can open the example and follow step focus", async ({
     page.getByRole("link", { name: "Skip to practice" }),
   ).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("button", { name: "Start practice" }),
+  ).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(
+    page.getByRole("link", { name: "Browse activities and progress" }),
+  ).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(page.getByLabel("Your first explanation")).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(

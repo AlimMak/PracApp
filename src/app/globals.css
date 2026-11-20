@@ -1903,3 +1903,164 @@ pre {
     bottom: 90%;
   }
 }
+
+.practice-nav {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.curriculum-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.curriculum-shell > a {
+  justify-self: start;
+}
+
+.curriculum-shell h2 {
+  font-size: 1.15rem;
+}
+
+.curriculum-kicker {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.session-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f4f1fc;
+}
+
+.activity-list {
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
+.activity-list li {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.activity-list li span:last-child {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.activity-list li [data-rating="I can explain this"] {
+  color: #17634a;
+}
+
+.activity-list li [data-rating="Still practicing"] {
+  color: #843311;
+}
+
+.rating-actions {
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.rating-actions .actions,
+.practice-lab .actions {
+  margin-top: 10px;
+}
+
+.rating-actions [aria-pressed="true"],
+.practice-lab [aria-pressed="true"] {
+  outline: 2px solid var(--purple);
+  outline-offset: -2px;
+}
+
+.curriculum-rubric {
+  display: grid;
+  gap: 8px;
+  padding-left: 20px;
+}
+
+.practice-answers {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.practice-lab {
+  margin: 14px 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8f7fd;
+}
+
+.practice-lab h2 {
+  margin: 0;
+}
+
+.lab-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.lab-grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lab-grid p,
+.lab-result {
+  margin: 8px 0 0;
+  font-size: 0.86rem;
+}
+
+.demo-div {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.cache-diagram {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 5px;
+  align-items: center;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.cache-diagram div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 76px;
+  padding: 5px 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  overflow-wrap: anywhere;
+  font-size: 0.79rem;
+}
+
+.cache-diagram div[data-used="true"] {
+  background: #e9e2ff;
+  border-color: var(--purple);
+}
+
+@media (max-width: 360px) {
+  .practice-lab {
+    padding: 9px;
+  }
+  .cache-diagram {
+    gap: 3px;
+  }
+}

@@ -2,6 +2,8 @@
 
 Mobile-first, untimed interview practice for new-grad software engineers. The API lesson opens at `/` and links to offline chat at `/offline-chat` and the behavioral lesson at `/star`.
 
+Select **Start practice** to get one CS topic, one visual design, and one behavioral prompt. **Leave session** returns to the catalog at `/practice`. **Resume practice** reopens the same question and draft. Mark an item **Still practicing** to prioritize it in a future session.
+
 ## Run locally
 
 Use Node.js 22.18 or newer (Node 24 LTS recommended).
@@ -43,6 +45,8 @@ Browser checks run against the production server in desktop Chromium, mobile Chr
 - Next.js App Router, TypeScript, React, and plain responsive CSS. The activities run in the browser.
 - `src/components/api-lesson.tsx` owns the lesson UI and weather playback. The diagram uses HTML, CSS and inline SVG, with a vertical layout on narrow phones.
 - `src/lib/lesson.ts` defines progress, validates restored state, preserves two practice attempts, and contains the fixed sample weather data and authored captions.
+- `src/lib/curriculum.ts` contains authored quick checks, examples, transfer questions, follow-ups, and rubrics. HTML and cache activities also have interactive labs.
+- `src/lib/practice-plan.ts` selects the next item in each track and stores learner ratings and the session position under `interview-practice:plan:v1`. Session drafts have their own keys, so direct study does not overwrite an in-progress session.
 - `src/lib/chat-design.ts` simulates sending, retention, and reconnecting for both chat paths. Chat progress and answers use the separate browser key `interview-practice:offline-chat:v1`. The activity sends no real messages.
 - `src/lib/star.ts` validates and restores stories, drafts, and rehearsal attempts from `interview-practice:star:v1`. Learners can delete a story and its rehearsals from **My stories**.
 - `src/components/answer-input.tsx` uses browser speech recognition when available. The app starts it on request, keeps the transcript in a preview until the learner adds it, and saves only answer text. The browser may send microphone audio to its speech provider. Typing and unrecorded rehearsal remain available if transcription is blocked or unsupported.
