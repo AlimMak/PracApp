@@ -4,7 +4,12 @@ export const PLAN_KEY = "interview-practice:plan:v1";
 export const RATINGS = ["I can explain this", "Still practicing"] as const;
 export type Rating = (typeof RATINGS)[number];
 export type Review = { rating: Rating; order: number };
-export type Session = { number: number; items: string[]; position: number };
+export type Session = {
+  number: number;
+  items: string[];
+  position: number;
+  draftId?: string;
+};
 export type Plan = {
   reviews: Record<string, Review>;
   session: Session | null;
@@ -26,7 +31,7 @@ export function nextTopic(plan: Plan): Activity {
   return ordered(plan.reviews)[0];
 }
 
-export function startSession(plan: Plan): Plan {
+export function startSession(plan: Plan, draftId?: string): Plan {
   if (plan.session && plan.session.position < TRACKS.length) return plan;
   return {
     ...plan,
@@ -34,6 +39,7 @@ export function startSession(plan: Plan): Plan {
       number: plan.completed + 1,
       items: TRACKS.map((track) => ordered(plan.reviews, track)[0].id),
       position: 0,
+      ...(draftId ? { draftId } : {}),
     },
   };
 }
@@ -88,6 +94,9 @@ export function restorePlan(raw: string | null): Plan {
       Number.isInteger(session.position) &&
       session.position >= 0 &&
       session.position <= TRACKS.length &&
+      (session.draftId === undefined ||
+        (typeof session.draftId === "string" &&
+          /^[a-z0-9-]{1,80}$/.test(session.draftId))) &&
       Array.isArray(session.items) &&
       session.items.length === TRACKS.length &&
       session.items.every((id: string, index: number) =>

@@ -8,15 +8,17 @@
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/lesson.test.ts tests/chat-design.test.ts tests/star.test.ts tests/practice-plan.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.119.2",
     "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.17",
     "@playwright/test": "1.65.1",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
